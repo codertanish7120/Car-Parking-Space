@@ -1,0 +1,36 @@
+import cv2
+import numpy as np
+
+# Load the image
+image = cv2.imread('parking.png')
+
+# Convert the image to grayscale
+gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+# Apply Gaussian blur to reduce noise
+gray = cv2.GaussianBlur(gray, (5, 5), 0)
+
+# Use Canny edge detection to find edges
+edges = cv2.Canny(gray, 50, 150)
+
+# Find contours in the edge-detected image
+contours, _ = cv2.findContours(edges.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+# Initialize a counter for parking spaces
+parking_space_count = 0
+
+# Iterate through the contours and filter out small ones (noise)
+for contour in contours:
+    if cv2.contourArea(contour) > 500:
+        # Draw a bounding box around the detected parking space
+        x, y, w, h = cv2.boundingRect(contour)
+        cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        
+        # Increment the parking space counter
+        parking_space_count += 1
+
+# Display the result
+cv2.putText(image, f'Parking Spaces: {parking_space_count}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+cv2.imshow('Parking Spaces', image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
