@@ -5,13 +5,11 @@ import numpy as np
 
 cap = cv2.VideoCapture('carPark.mp4')
 width, height = 103, 43
-with open('CarParkPos', 'rb') as f:
+with open('polygons', 'rb') as f:
     posList = pickle.load(f)
-
 
 def empty(a):
     pass
-
 
 cv2.namedWindow("Vals")
 cv2.resizeWindow("Vals", 640, 240)
